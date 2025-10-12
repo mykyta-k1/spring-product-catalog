@@ -2,23 +2,24 @@ package com.product.product.application.service.impl;
 
 import static com.product.util.SlugGenerator.generateSlug;
 
-import com.product.product.application.dto.req.BrandCreateRequest;
-import com.product.product.application.dto.req.BrandUpdateRequest;
-import com.product.product.application.dto.resp.BrandShortResponse;
-import com.product.product.application.dto.resp.BrandUpdateResponse;
+import com.product.product.application.dto.req.BrandDtoRequestFactory.BrandCreateRequest;
+import com.product.product.application.dto.req.BrandDtoRequestFactory.BrandUpdateRequest;
+import com.product.product.application.dto.resp.BrandDtoResponseFactory.BrandShortResponse;
+import com.product.product.application.dto.resp.BrandDtoResponseFactory.BrandUpdateResponse;
 import com.product.product.application.exception.BrandNotFoundException;
 import com.product.product.application.mapper.BrandMapper;
 import com.product.product.application.service.contract.BrandService;
 import com.product.product.domain.model.Brand;
 import com.product.product.infrastructure.dao.BrandRepository;
-import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class BrandServiceImpl implements BrandService {
 
     private final BrandRepository brandRepository;
@@ -29,38 +30,34 @@ public class BrandServiceImpl implements BrandService {
         return brandRepository.findById(id).orElseThrow(BrandNotFoundException::new);
     }
 
-    @Transactional
+    @Transactional(readOnly = false)
     @Override
     public void save(BrandCreateRequest dto) {
+        UUID id = UUID.randomUUID();
         brandRepository.save(Brand.builder()
+            .id(id)
             .name(dto.getName())
-            .slug(generateSlug(dto.getName(), UUID.randomUUID()))
+            .slug(generateSlug(dto.getName(), id))
             .logoUrl(dto.getLogoUrl())
             .bannerUrl(dto.getBannerUrl())
             .build()
         );
     }
 
-    @Transactional
+    @Transactional(readOnly = false)
     @Override
     public BrandUpdateResponse update(String slug, BrandUpdateRequest dto) {
         Brand b = findBySlug(slug);
+        brandMapper.updateBrandFromDto(dto, b);
 
         if (!b.getName().equals(dto.getName())) {
-            b.setName(dto.getName());
-            generateSlug(dto.getName(), UUID.randomUUID());
-        }
-        if (!b.getLogoUrl().equals(dto.getLogoUrl())) {
-            b.setLogoUrl(dto.getLogoUrl());
-        }
-        if (!b.getBannerUrl().equals(dto.getBannerUrl())) {
-            b.setBannerUrl(dto.getBannerUrl());
+            b.setSlug(generateSlug(dto.getName(), b.getId()));
         }
 
         return brandMapper.brandToBrandUpdateResponse(b);
     }
 
-    @Transactional
+    @Transactional(readOnly = false)
     @Override
     public void deleteBySlug(String slug) {
         brandRepository.deleteBySlug(slug);

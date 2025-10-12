@@ -40,6 +40,7 @@ public class Product {
     @Column(columnDefinition = "TEXT")
     private String description;
 
+    @Builder.Default
     @Column(nullable = false)
     private BigDecimal price = BigDecimal.ZERO;
     private int stock = 0;
@@ -52,7 +53,11 @@ public class Product {
 
     @ManyToOne
     private ProductType productType;
+
+    @Builder.Default
     private int weightGrams = 0;
+
+    @Builder.Default
     private int volumeMl = 0;
     private String series;
 

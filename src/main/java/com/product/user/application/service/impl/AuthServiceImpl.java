@@ -1,8 +1,8 @@
 package com.product.user.application.service.impl;
 
 import com.product.security.contract.JwtService;
-import com.product.user.application.dto.req.UserLoginDto;
-import com.product.user.application.dto.req.UserRegisterDto;
+import com.product.user.application.dto.req.UserDtoRequestFactory.UserLoginDto;
+import com.product.user.application.dto.req.UserDtoRequestFactory.UserRegisterDto;
 import com.product.user.application.service.contract.AuthService;
 import com.product.user.application.service.contract.UserService;
 import java.util.UUID;

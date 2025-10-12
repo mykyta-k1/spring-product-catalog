@@ -16,4 +16,6 @@ public interface ProductRepository extends JpaRepository<Product, UUID>,
     Optional<Product> findBySlug(String slug);
 
     void deleteBySlug(String slug);
+
+    boolean existsBySlug(String slug);
 }

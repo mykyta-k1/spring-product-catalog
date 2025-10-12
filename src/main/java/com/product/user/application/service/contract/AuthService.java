@@ -1,7 +1,8 @@
 package com.product.user.application.service.contract;
 
-import com.product.user.application.dto.req.UserLoginDto;
-import com.product.user.application.dto.req.UserRegisterDto;
+
+import com.product.user.application.dto.req.UserDtoRequestFactory.UserLoginDto;
+import com.product.user.application.dto.req.UserDtoRequestFactory.UserRegisterDto;
 
 public interface AuthService {
 

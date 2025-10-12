@@ -44,9 +44,14 @@ public class User {
 
     @Column(length = 100)
     private String patronymic;
+
+    @Builder.Default
     private boolean isActive = false;
+
+    @Builder.Default
     private boolean isVerified = false;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role = Role.USER;

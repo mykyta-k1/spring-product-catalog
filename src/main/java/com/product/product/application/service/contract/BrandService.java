@@ -1,9 +1,10 @@
 package com.product.product.application.service.contract;
 
-import com.product.product.application.dto.req.BrandCreateRequest;
-import com.product.product.application.dto.req.BrandUpdateRequest;
-import com.product.product.application.dto.resp.BrandShortResponse;
-import com.product.product.application.dto.resp.BrandUpdateResponse;
+
+import com.product.product.application.dto.req.BrandDtoRequestFactory.BrandCreateRequest;
+import com.product.product.application.dto.req.BrandDtoRequestFactory.BrandUpdateRequest;
+import com.product.product.application.dto.resp.BrandDtoResponseFactory.BrandShortResponse;
+import com.product.product.application.dto.resp.BrandDtoResponseFactory.BrandUpdateResponse;
 import com.product.product.domain.model.Brand;
 import java.util.List;
 import java.util.UUID;

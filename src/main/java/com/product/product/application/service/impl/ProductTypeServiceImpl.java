@@ -2,21 +2,22 @@ package com.product.product.application.service.impl;
 
 import static com.product.util.SlugGenerator.generateSlug;
 
-import com.product.product.application.dto.resp.ProductTypeShortResponse;
-import com.product.product.application.dto.resp.ProductTypeUpdateResponse;
+import com.product.product.application.dto.resp.ProductTypeDtoResponseFactory.ProductTypeShortResponse;
+import com.product.product.application.dto.resp.ProductTypeDtoResponseFactory.ProductTypeUpdateResponse;
 import com.product.product.application.exception.ProductTypeNotFoundException;
 import com.product.product.application.mapper.ProductTypeMapper;
 import com.product.product.application.service.contract.ProductTypeService;
 import com.product.product.domain.model.ProductType;
 import com.product.product.infrastructure.dao.ProductTypeRepository;
-import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ProductTypeServiceImpl implements ProductTypeService {
 
     private final ProductTypeRepository productTypeRepository;
@@ -27,7 +28,7 @@ public class ProductTypeServiceImpl implements ProductTypeService {
         return productTypeRepository.findById(id).orElseThrow(ProductTypeNotFoundException::new);
     }
 
-    @Transactional
+    @Transactional(readOnly = false)
     @Override
     public void save(String name) {
         productTypeRepository.save(ProductType.builder()
@@ -37,7 +38,7 @@ public class ProductTypeServiceImpl implements ProductTypeService {
         );
     }
 
-    @Transactional
+    @Transactional(readOnly = false)
     @Override
     public ProductTypeUpdateResponse update(String slug, String name) {
         ProductType p = findBySlug(slug);
@@ -50,7 +51,7 @@ public class ProductTypeServiceImpl implements ProductTypeService {
         return productTypeMapper.productTypeToProductTypeUpdateResponse(p);
     }
 
-    @Transactional
+    @Transactional(readOnly = false)
     @Override
     public void deleteBySlug(String slug) {
         productTypeRepository.deleteBySlug(slug);

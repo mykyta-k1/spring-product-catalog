@@ -1,7 +1,7 @@
 package com.product.product.application.controller;
 
 import com.product.category.application.service.contract.CategoryService;
-import com.product.product.application.dto.req.ProductFilterRequest;
+import com.product.product.application.dto.req.ProductDtoRequestFactory.ProductFilterRequest;
 import com.product.product.application.service.contract.BrandService;
 import com.product.product.application.service.contract.ProductService;
 import com.product.product.application.service.contract.ProductTypeService;
@@ -25,10 +25,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequiredArgsConstructor
 public class ProductController {
 
-    private final ProductService productService;
-    private final CategoryService categoryService;
-    private final BrandService brandService;
     private final ProductTypeService productTypeService;
+    private final CategoryService categoryService;
+    private final ProductService productService;
+    private final BrandService brandService;
 
     @GetMapping
     public String findAllBy(

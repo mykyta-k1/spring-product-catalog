@@ -1,8 +1,8 @@
 package com.product.user.application.service.impl;
 
-import com.product.user.application.dto.req.UserLoginDto;
-import com.product.user.application.dto.req.UserRegisterDto;
-import com.product.user.application.dto.req.UserUpdateRequest;
+import com.product.user.application.dto.req.UserDtoRequestFactory.UserLoginDto;
+import com.product.user.application.dto.req.UserDtoRequestFactory.UserRegisterDto;
+import com.product.user.application.dto.req.UserDtoRequestFactory.UserUpdateRequest;
 import com.product.user.application.dto.resp.UserUpdateResponse;
 import com.product.user.application.exception.UserAlreadyExistsException;
 import com.product.user.application.exception.UserNotFoundException;
@@ -11,25 +11,25 @@ import com.product.user.application.service.contract.PasswordEncoderService;
 import com.product.user.application.service.contract.UserService;
 import com.product.user.domain.model.User;
 import com.product.user.infrastructure.dao.UserRepository;
-import jakarta.transaction.Transactional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = false)
 public class UserServiceImpl implements UserService {
 
-    private final UserMapper userMapper;
-    private final UserRepository userRepository;
     private final PasswordEncoderService passwordEncoder;
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
-    @Transactional
+    @Transactional(readOnly = false)
     @Override
     public void save(UserRegisterDto dto) {
-        log.info("Saving user {}", dto);
         userRepository.save(User.builder()
             .email(dto.getEmail())
             .passwordHash(passwordEncoder.hashPassword(dto.getPassword()))
@@ -38,27 +38,17 @@ public class UserServiceImpl implements UserService {
             .patronymic(dto.getPatronymic())
             .build()
         );
+        log.info("Saving user {}", dto);
     }
 
-    @Transactional
+    @Transactional(readOnly = false)
     @Override
     public UserUpdateResponse update(UserUpdateRequest dto, UUID currentUserId) {
         User u = findUserById(currentUserId);
-
-        if (!u.getFirstName().equals(dto.getFirstName())) {
-            u.setFirstName(dto.getFirstName());
-        }
-        if (!u.getLastName().equals(dto.getLastName())) {
-            u.setLastName(dto.getLastName());
-        }
-        if (!u.getPatronymic().equals(dto.getPatronymic())) {
-            u.setPatronymic(dto.getPatronymic());
-        }
-
+        userMapper.updateUserFromDto(dto, u);
         return userMapper.userToUserUpdateResponse(u);
     }
 
-    @Transactional
     @Override
     public UUID checkUserAndPassword(UserLoginDto dto) {
         User u = findUserByEmail(dto.getEmail());
@@ -70,7 +60,6 @@ public class UserServiceImpl implements UserService {
         return u.getId();
     }
 
-    @Transactional
     @Override
     public void isExistsUserByEmail(String email) {
         if (userRepository.existsByEmail(email)) {

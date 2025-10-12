@@ -1,8 +1,8 @@
 package com.product.product.application.service.contract;
 
-import com.product.product.application.dto.resp.ProductTypeShortResponse;
-import com.product.product.application.dto.resp.ProductTypeUpdateResponse;
+import com.product.product.application.dto.resp.ProductTypeDtoResponseFactory.ProductTypeShortResponse;
 import com.product.product.domain.model.ProductType;
+import com.product.product.application.dto.resp.ProductTypeDtoResponseFactory.ProductTypeUpdateResponse;
 import java.util.List;
 import java.util.UUID;
 

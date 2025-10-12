@@ -1,15 +1,17 @@
 package com.product.product.application.service.impl;
 
+import static com.product.shared.exception.ExceptionControllerAdvice.exceptionWrapper;
 import static com.product.util.SlugGenerator.generateSlug;
 
 import com.product.category.application.service.contract.CategoryService;
-import com.product.product.application.dto.req.ProductCreateRequest;
-import com.product.product.application.dto.req.ProductFilterRequest;
-import com.product.product.application.dto.req.ProductUpdateRequest;
-import com.product.product.application.dto.resp.ProductDetailsResponse;
-import com.product.product.application.dto.resp.ProductShortResponse;
-import com.product.product.application.dto.resp.ProductUpdateResponse;
+import com.product.product.application.dto.req.ProductDtoRequestFactory.ProductCreateRequest;
+import com.product.product.application.dto.req.ProductDtoRequestFactory.ProductFilterRequest;
+import com.product.product.application.dto.req.ProductDtoRequestFactory.ProductUpdateRequest;
+import com.product.product.application.dto.resp.ProductDtoResponseFactory.ProductDetailsResponse;
+import com.product.product.application.dto.resp.ProductDtoResponseFactory.ProductShortResponse;
+import com.product.product.application.dto.resp.ProductDtoResponseFactory.ProductUpdateResponse;
 import com.product.product.application.exception.ProductNotFoundException;
+import com.product.product.application.exception.ProductUnavailableException;
 import com.product.product.application.mapper.ProductMapper;
 import com.product.product.application.service.contract.BrandService;
 import com.product.product.application.service.contract.ProductService;
@@ -17,7 +19,8 @@ import com.product.product.application.service.contract.ProductTypeService;
 import com.product.product.domain.model.Product;
 import com.product.product.infrastructure.dao.ProductRepository;
 import com.product.product.infrastructure.dao.ProductSpecifications;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +31,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ProductServiceImpl implements ProductService {
 
     private final ProductTypeService productTypeService;
@@ -41,13 +45,15 @@ public class ProductServiceImpl implements ProductService {
         return productMapper.productToProductDetailsResponse(findProductBySlug(slug));
     }
 
-    @Transactional
+    @Transactional(readOnly = false)
     @Override
-    public void save(ProductCreateRequest dto) {
-        productRepository.save(Product.builder()
+    public ProductUpdateResponse save(ProductCreateRequest dto) {
+        UUID id = UUID.randomUUID();
+        Product p = productRepository.save(Product.builder()
+            .id(id)
             .name(dto.getName())
             .description(dto.getDescription())
-            .slug(generateSlug(dto.getName(), UUID.randomUUID()))
+            .slug(generateSlug(dto.getName(), id))
             .description(dto.getDescription())
             .price(dto.getPrice())
             .stock(dto.getStock())
@@ -59,59 +65,51 @@ public class ProductServiceImpl implements ProductService {
             .series(dto.getSeries())
             .build()
         );
+        return productMapper.productToProductUpdateResponse(p);
     }
 
-    @Transactional
+    @Transactional(readOnly = false)
     @Override
     public ProductUpdateResponse update(String slug, ProductUpdateRequest dto) {
-        Product p = findProductBySlug(slug);
+        Product p = exceptionWrapper(
+            () -> findProductBySlug(slug),
+            cause -> new ProductUnavailableException(
+                "Access denied legally", "Product update error", cause)
+        );
 
         if (!p.getName().equals(dto.getName())) {
             p.setName(dto.getName());
-            generateSlug(dto.getName(), UUID.randomUUID());
+            generateSlug(dto.getName(), p.getId());
         }
-        if (!p.getDescription().equals(dto.getDescription())) {
-            p.setDescription(dto.getDescription());
-        }
-        if (!p.getPrice().equals(dto.getPrice())) {
-            p.setPrice(dto.getPrice());
-        }
-        if (p.getStock() != dto.getStock()) {
-            p.setStock(dto.getStock());
-        }
-        if (p.getBrand().getId().equals(dto.getBrandId())) {
+
+        productMapper.updateProductFromDto(dto, p);
+
+        if (!p.getBrand().getId().equals(dto.getBrandId())) {
             p.setBrand(brandService.findById(dto.getBrandId()));
         }
-        if (p.getCategory().getId().equals(dto.getCategoryId())) {
+        if (!p.getCategory().getId().equals(dto.getCategoryId())) {
             p.setCategory(categoryService.findById(dto.getCategoryId()));
         }
-        if (p.getProductType().getId().equals(dto.getProductTypeId())) {
+        if (!p.getProductType().getId().equals(dto.getProductTypeId())) {
             p.setProductType(productTypeService.findById(dto.getProductTypeId()));
-        }
-        if (p.getWeightGrams() != dto.getWeightGrams()) {
-            p.setWeightGrams(dto.getWeightGrams());
-        }
-        if (p.getVolumeMl() != dto.getVolumeMl()) {
-            p.setVolumeMl(dto.getVolumeMl());
-        }
-        if (p.getSeries().equals(dto.getSeries())) {
-            p.setSeries(dto.getSeries());
         }
 
         return productMapper.productToProductUpdateResponse(p);
     }
 
-    @Transactional
+    @Transactional(readOnly = false)
     @Override
     public void deleteBySlug(String slug) {
-        productRepository.deleteBySlug(slug);
+        if (productRepository.existsBySlug(slug)) {
+            productRepository.deleteBySlug(slug);
+        }
+        throw new ProductNotFoundException();
     }
 
     private Product findProductBySlug(String slug) {
         return productRepository.findBySlug(slug).orElseThrow(ProductNotFoundException::new);
     }
 
-    @Transactional
     @Override
     public Page<ProductShortResponse> findAllBy(ProductFilterRequest filters, Pageable pageable
     ) {
@@ -136,7 +134,19 @@ public class ProductServiceImpl implements ProductService {
             .map(productMapper::productToProductShortResponse);
     }
 
-    @Transactional
+    @Override
+    public Page<ProductDetailsResponse> findAllBy(
+        String keyword, BigDecimal minPrice, BigDecimal maxPrice,
+        Pageable pageable
+    ) {
+        Specification<Product> spec = Specification
+            .where(ProductSpecifications.nameContains(keyword))
+            .and(ProductSpecifications.priceBetween(minPrice, maxPrice));
+
+        return productRepository.findAll(spec, pageable)
+            .map(productMapper::productToProductDetailsResponse);
+    }
+
     @Override
     public List<ProductShortResponse> findAllProductsByLatestCreatedAt() {
         return productRepository.findFirst5ByOrderByCreatedAtDesc().stream()
