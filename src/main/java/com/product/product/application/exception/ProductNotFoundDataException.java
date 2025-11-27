@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(BAD_REQUEST)
 public class ProductNotFoundDataException extends ApiException {
 
-    public ProductNotFoundDataException(String message) {
-        super(message);
-    }
+  public ProductNotFoundDataException(String message) {
+    super(message);
+  }
 }

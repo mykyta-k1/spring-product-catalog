@@ -14,21 +14,22 @@ import org.mapstruct.MappingTarget;
     ProductTypeMapper.class})
 public interface ProductMapper {
 
-    /**
-     * Оновлює існуючий об'єкт {@link Product}, з даними {@link ProductUpdateRequest}
-     * @param dto дані що надходять на оновлення продукту
-     * @param product продукт з бази даних
-     */
-    void updateProductFromDto(ProductUpdateRequest dto, @MappingTarget Product product);
+  /**
+   * Оновлює існуючий об'єкт {@link Product}, з даними {@link ProductUpdateRequest}
+   *
+   * @param dto     дані що надходять на оновлення продукту
+   * @param product продукт з бази даних
+   */
+  void updateProductFromDto(ProductUpdateRequest dto, @MappingTarget Product product);
 
-    @Mapping(source = "brand.id", target = "brand")
-    @Mapping(source = "category.id", target = "category")
-    @Mapping(source = "productType.id", target = "productType")
-    ProductUpdateResponse productToProductUpdateResponse(Product product);
+  @Mapping(source = "brand.id", target = "brand")
+  @Mapping(source = "category.id", target = "category")
+  @Mapping(source = "productType.id", target = "productType")
+  ProductUpdateResponse productToProductUpdateResponse(Product product);
 
-    ProductShortResponse productShortViewToProductShortResponse(ProductShortView productShortView);
+  ProductShortResponse productShortViewToProductShortResponse(ProductShortView productShortView);
 
-    ProductDetailsResponse productToProductDetailsResponse(Product product);
+  ProductDetailsResponse productToProductDetailsResponse(Product product);
 
-    ProductShortResponse productToProductShortResponse(Product product);
+  ProductShortResponse productToProductShortResponse(Product product);
 }

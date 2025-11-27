@@ -9,17 +9,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/categories")
+@RequestMapping("/api/v2/categories")
 @RequiredArgsConstructor
 public class CategoryController {
 
-    private final CategoryService categoryService;
-    private final ProductService productService;
+  private final CategoryService categoryService;
+  private final ProductService productService;
 
-    @GetMapping
-    public String getAll(Model model) {
-        model.addAttribute("categories", categoryService.findAllShortCategories());
-        model.addAttribute("products", productService.findAllProductsByLatestCreatedAt());
-        return "index";
-    }
+  @GetMapping
+  public String getAll(Model model) {
+    model.addAttribute("categories", categoryService.findAllShortCategories());
+    model.addAttribute("products", productService.findAllProductsByLatestCreatedAt());
+    return "index";
+  }
 }

@@ -6,7 +6,7 @@ import com.product.user.application.dto.req.UserDtoRequestFactory.UserRegisterDt
 
 public interface AuthService {
 
-    String login(UserLoginDto dto);
+  String login(UserLoginDto dto);
 
-    void register(UserRegisterDto dto);
+  void register(UserRegisterDto dto);
 }

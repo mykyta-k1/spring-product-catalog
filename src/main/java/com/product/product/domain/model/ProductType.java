@@ -25,22 +25,22 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Table(name = "product_types")
 public class ProductType {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
+  private UUID id;
 
-    @Column(length = 100, nullable = false, unique = true)
-    private String name;
+  @Column(length = 100, nullable = false, unique = true)
+  private String name;
 
-    @Column(length = 100, nullable = false, unique = true)
-    private String slug;
+  @Column(length = 100, nullable = false, unique = true)
+  private String slug;
 
-    @OneToMany(mappedBy = "productType")
-    private List<Product> products;
+  @OneToMany(mappedBy = "productType")
+  private List<Product> products;
 
-    @CreationTimestamp
-    private OffsetDateTime createdAt;
+  @CreationTimestamp
+  private OffsetDateTime createdAt;
 
-    @UpdateTimestamp
-    private OffsetDateTime updatedAt;
+  @UpdateTimestamp
+  private OffsetDateTime updatedAt;
 }

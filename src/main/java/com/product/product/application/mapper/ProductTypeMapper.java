@@ -8,7 +8,7 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface ProductTypeMapper {
 
-    ProductTypeUpdateResponse productTypeToProductTypeUpdateResponse(ProductType productType);
+  ProductTypeUpdateResponse productTypeToProductTypeUpdateResponse(ProductType productType);
 
-    ProductTypeShortResponse productTypeToProductTypeShortResponse(ProductType productType);
+  ProductTypeShortResponse productTypeToProductTypeShortResponse(ProductType productType);
 }

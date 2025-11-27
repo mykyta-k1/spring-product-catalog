@@ -25,24 +25,24 @@ import org.hibernate.annotations.UpdateTimestamp;
 @AllArgsConstructor
 public class Brand {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
+  private UUID id;
 
-    @Column(nullable = false, unique = true)
-    private String name;
+  @Column(nullable = false, unique = true)
+  private String name;
 
-    @Column(nullable = false, unique = true)
-    private String slug;
-    private String logoUrl;
-    private String bannerUrl;
+  @Column(nullable = false, unique = true)
+  private String slug;
+  private String logoUrl;
+  private String bannerUrl;
 
-    @OneToMany(mappedBy = "brand")
-    private List<Product> products;
+  @OneToMany(mappedBy = "brand")
+  private List<Product> products;
 
-    @CreationTimestamp
-    private OffsetDateTime createdAt;
+  @CreationTimestamp
+  private OffsetDateTime createdAt;
 
-    @UpdateTimestamp
-    private OffsetDateTime updatedAt;
+  @UpdateTimestamp
+  private OffsetDateTime updatedAt;
 }

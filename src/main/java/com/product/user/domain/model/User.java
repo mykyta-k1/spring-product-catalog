@@ -26,41 +26,41 @@ import org.hibernate.annotations.UpdateTimestamp;
 @AllArgsConstructor
 public class User {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
+  private UUID id;
 
-    @Column(nullable = false, unique = true)
-    private String email;
+  @Column(nullable = false, unique = true)
+  private String email;
 
-    @Column(length = 128, nullable = false)
-    private String passwordHash;
+  @Column(length = 128, nullable = false)
+  private String passwordHash;
 
-    @Column(length = 100)
-    private String firstName;
+  @Column(length = 100)
+  private String firstName;
 
-    @Column(length = 100)
-    private String lastName;
+  @Column(length = 100)
+  private String lastName;
 
-    @Column(length = 100)
-    private String patronymic;
+  @Column(length = 100)
+  private String patronymic;
 
-    @Builder.Default
-    private boolean isActive = false;
+  @Builder.Default
+  private boolean isActive = false;
 
-    @Builder.Default
-    private boolean isVerified = false;
+  @Builder.Default
+  private boolean isVerified = false;
 
-    @Builder.Default
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Role role = Role.USER;
+  @Builder.Default
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
+  private Role role = Role.USER;
 
-    private OffsetDateTime lastLoginAt;
+  private OffsetDateTime lastLoginAt;
 
-    @CreationTimestamp
-    private OffsetDateTime createdAt;
+  @CreationTimestamp
+  private OffsetDateTime createdAt;
 
-    @UpdateTimestamp
-    private OffsetDateTime updatedAt;
+  @UpdateTimestamp
+  private OffsetDateTime updatedAt;
 }

@@ -16,29 +16,29 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final UserRepository userRepository;
+  private final UserRepository userRepository;
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User u = userRepository.findByEmail(username)
-            .orElseThrow(() -> new UsernameNotFoundException(username));
-        return buildUserPrincipal(u);
-    }
+  @Override
+  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    User u = userRepository.findByEmail(username)
+        .orElseThrow(() -> new UsernameNotFoundException(username));
+    return buildUserPrincipal(u);
+  }
 
-    // Loading user principal use id from jwt filter
-    public UserPrincipal loadUserById(UUID id) {
-        User u = userRepository.findById(id)
-            .orElseThrow(() -> new UsernameNotFoundException("User not found with id"));
-        return buildUserPrincipal(u);
-    }
+  // Loading user principal use id from jwt filter
+  public UserPrincipal loadUserById(UUID id) {
+    User u = userRepository.findById(id)
+        .orElseThrow(() -> new UsernameNotFoundException("User not found with id"));
+    return buildUserPrincipal(u);
+  }
 
-    private UserPrincipal buildUserPrincipal(User user) {
-        return new UserPrincipal(
-            user.getId(),
-            user.getEmail(),
-            user.isActive(),
-            user.isVerified(),
-            user.getRole()
-        );
-    }
+  private UserPrincipal buildUserPrincipal(User user) {
+    return new UserPrincipal(
+        user.getId(),
+        user.getEmail(),
+        user.isActive(),
+        user.isVerified(),
+        user.getRole()
+    );
+  }
 }

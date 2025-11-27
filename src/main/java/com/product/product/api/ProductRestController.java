@@ -30,45 +30,45 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class ProductRestController {
 
-    private final ProductService productService;
+  private final ProductService productService;
 
-    @GetMapping
-    public ResponseEntity<Page<ProductDetailsResponse>> getAll(
-        @RequestParam(required = false) String keyword,
-        @RequestParam(required = false) BigDecimal minPrice,
-        @RequestParam(required = false) BigDecimal maxPrice,
-        @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "10") int size
-    ) {
-        Page<ProductDetailsResponse> data = productService.findAllBy(
-            keyword, minPrice, maxPrice, PageRequest.of(page, size));
-        if (data.isEmpty()) {
-            throw new ProductNotFoundDataException("Product list is empty");
-        }
-        return ResponseEntity.ok(data);
+  @GetMapping
+  public ResponseEntity<Page<ProductDetailsResponse>> getAll(
+      @RequestParam(required = false) String keyword,
+      @RequestParam(required = false) BigDecimal minPrice,
+      @RequestParam(required = false) BigDecimal maxPrice,
+      @RequestParam(defaultValue = "0") int page,
+      @RequestParam(defaultValue = "10") int size
+  ) {
+    Page<ProductDetailsResponse> data = productService.findAllBy(
+        keyword, minPrice, maxPrice, PageRequest.of(page, size));
+    if (data.isEmpty()) {
+      throw new ProductNotFoundDataException("Product list is empty");
     }
+    return ResponseEntity.ok(data);
+  }
 
-    @GetMapping("/{slug}")
-    public ResponseEntity<ProductDetailsResponse> get(@PathVariable String slug) {
-        return ResponseEntity.ok(productService.findBySlug(slug));
-    }
+  @GetMapping("/{slug}")
+  public ResponseEntity<ProductDetailsResponse> get(@PathVariable String slug) {
+    return ResponseEntity.ok(productService.findBySlug(slug));
+  }
 
-    @PostMapping
-    public ResponseEntity<ProductUpdateResponse> create(
-        @Valid @RequestBody ProductCreateRequest dto
-    ) {
-        return ResponseEntity.status(CREATED).body(productService.save(dto));
-    }
+  @PostMapping
+  public ResponseEntity<ProductUpdateResponse> create(
+      @Valid @RequestBody ProductCreateRequest dto
+  ) {
+    return ResponseEntity.status(CREATED).body(productService.save(dto));
+  }
 
-    @PutMapping
-    public ResponseEntity<ProductUpdateResponse> update(
-        @RequestParam String slug, @Valid @RequestBody ProductUpdateRequest dto) {
-        return ResponseEntity.ok().body(productService.update(slug, dto));
-    }
+  @PutMapping
+  public ResponseEntity<ProductUpdateResponse> update(
+      @RequestParam String slug, @Valid @RequestBody ProductUpdateRequest dto) {
+    return ResponseEntity.ok().body(productService.update(slug, dto));
+  }
 
-    @DeleteMapping("/{slug}")
-    public ResponseEntity<Void> delete(@PathVariable String slug) {
-        productService.deleteBySlug(slug);
-        return ResponseEntity.status(NO_CONTENT).build();
-    }
+  @DeleteMapping("/{slug}")
+  public ResponseEntity<Void> delete(@PathVariable String slug) {
+    productService.deleteBySlug(slug);
+    return ResponseEntity.status(NO_CONTENT).build();
+  }
 }

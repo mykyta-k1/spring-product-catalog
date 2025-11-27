@@ -9,15 +9,15 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class PasswordEncoderServiceImpl implements PasswordEncoderService {
 
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+  private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    @Override
-    public String hashPassword(String password) {
-        return bCryptPasswordEncoder.encode(password);
-    }
+  @Override
+  public String hashPassword(String password) {
+    return bCryptPasswordEncoder.encode(password);
+  }
 
-    @Override
-    public boolean checkPassword(String plainPassword, String hashedPassword) {
-        return bCryptPasswordEncoder.matches(hashedPassword, hashedPassword);
-    }
+  @Override
+  public boolean checkPassword(String plainPassword, String hashedPassword) {
+    return bCryptPasswordEncoder.matches(hashedPassword, hashedPassword);
+  }
 }

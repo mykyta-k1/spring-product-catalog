@@ -11,14 +11,15 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = "spring")
 public interface BrandMapper {
 
-    /**
-     * Оновлює наявний бренд з дто
-     * @param dto дані дто
-     * @param brand бренд з бази даних
-     */
-    void updateBrandFromDto(BrandUpdateRequest dto, @MappingTarget Brand brand);
+  /**
+   * Оновлює наявний бренд з дто
+   *
+   * @param dto   дані дто
+   * @param brand бренд з бази даних
+   */
+  void updateBrandFromDto(BrandUpdateRequest dto, @MappingTarget Brand brand);
 
-    BrandUpdateResponse brandToBrandUpdateResponse(Brand brand);
+  BrandUpdateResponse brandToBrandUpdateResponse(Brand brand);
 
-    BrandShortResponse brandToBrandShortResponse(Brand brand);
+  BrandShortResponse brandToBrandShortResponse(Brand brand);
 }

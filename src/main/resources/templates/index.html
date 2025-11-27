@@ -66,11 +66,13 @@
 
 <div id="carouselExampleLight" class="carousel carousel-light slide">
   <div class="carousel-indicators">
-    <button th:each="product, iterStat : ${products}" th:classappend="${iterStat.first} ? 'active'" type="button"
+    <button th:each="product, iterStat : ${products}" th:classappend="${iterStat.first} ? 'active'"
+            type="button"
             data-bs-target="#carouselExampleLight" th:data-bs-slide-to="${iterStat.index}"></button>
   </div>
   <div class="carousel-inner">
-    <div th:each="product, iterStat : ${products}"  th:classappend="${iterStat.first} ? 'active'" class="carousel-item"
+    <div th:each="product, iterStat : ${products}" th:classappend="${iterStat.first} ? 'active'"
+         class="carousel-item"
          data-bs-interval="10000">
       <img th:src="${product.imageUrl}" class="d-block w-100" th:alt="${product.slug}">
       <div class="carousel-caption d-none d-md-block">

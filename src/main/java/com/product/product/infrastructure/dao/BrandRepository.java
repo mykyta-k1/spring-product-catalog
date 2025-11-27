@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface BrandRepository extends JpaRepository<Brand, UUID> {
 
-    Optional<Brand> findBySlug(String slug);
+  Optional<Brand> findBySlug(String slug);
 
-    void deleteBySlug(String slug);
+  void deleteBySlug(String slug);
 }

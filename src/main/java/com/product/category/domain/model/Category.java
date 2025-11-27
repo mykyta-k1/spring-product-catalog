@@ -6,11 +6,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.persistence.Id;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -23,29 +23,29 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Table(name = "categories")
 public class Category {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
+  private UUID id;
 
-    @ManyToOne
-    @JoinColumn(name = "parent_id")
-    private Category parent;
+  @ManyToOne
+  @JoinColumn(name = "parent_id")
+  private Category parent;
 
-    @OneToMany(mappedBy = "parent")
-    private List<Category> subcategories;
+  @OneToMany(mappedBy = "parent")
+  private List<Category> subcategories;
 
-    @Column(length = 100, nullable = false, unique = true)
-    private String name;
+  @Column(length = 100, nullable = false, unique = true)
+  private String name;
 
-    @Column(length = 100, nullable = false, unique = true)
-    private String slug;
+  @Column(length = 100, nullable = false, unique = true)
+  private String slug;
 
-    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
-    private List<Product> products;
+  @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
+  private List<Product> products;
 
-    @CreationTimestamp
-    private OffsetDateTime createdAt;
+  @CreationTimestamp
+  private OffsetDateTime createdAt;
 
-    @UpdateTimestamp
-    private OffsetDateTime updatedAt;
+  @UpdateTimestamp
+  private OffsetDateTime updatedAt;
 }

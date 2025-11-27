@@ -9,9 +9,11 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface CategoryMapper {
 
-    @Mapping(source = "parent.id", target = "parentId")
-    CategoryShortResponse categoryShortViewToCategoryShortResponse(CategoryShortView categoryShortView);
+  @Mapping(source = "parent.id", target = "parentId")
+  CategoryShortResponse categoryShortViewToCategoryShortResponse(
+      CategoryShortView categoryShortView
+  );
 
-    @Mapping(source = "parent.id", target = "parentId")
-    CategoryShortResponse categoryToCategoryShortResponse(Category category);
+  @Mapping(source = "parent.id", target = "parentId")
+  CategoryShortResponse categoryToCategoryShortResponse(Category category);
 }

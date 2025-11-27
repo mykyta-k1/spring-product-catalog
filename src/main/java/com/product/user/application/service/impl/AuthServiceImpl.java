@@ -13,18 +13,18 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
-    private final UserService userService;
-    private final JwtService jwtService;
+  private final UserService userService;
+  private final JwtService jwtService;
 
-    @Override
-    public String login(UserLoginDto dto) {
-        UUID userId = userService.checkUserAndPassword(dto);
-        return jwtService.generateToken(userId);
-    }
+  @Override
+  public String login(UserLoginDto dto) {
+    UUID userId = userService.checkUserAndPassword(dto);
+    return jwtService.generateToken(userId);
+  }
 
-    @Override
-    public void register(UserRegisterDto dto) {
-        userService.isExistsUserByEmail(dto.getEmail());
-        userService.save(dto);
-    }
+  @Override
+  public void register(UserRegisterDto dto) {
+    userService.isExistsUserByEmail(dto.getEmail());
+    userService.save(dto);
+  }
 }

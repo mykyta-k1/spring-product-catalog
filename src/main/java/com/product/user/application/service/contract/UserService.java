@@ -9,17 +9,17 @@ import java.util.UUID;
 
 public interface UserService {
 
-    void save(UserRegisterDto dto);
+  void save(UserRegisterDto dto);
 
-    UserUpdateResponse update(UserUpdateRequest dto, UUID currentUserId);
+  UserUpdateResponse update(UserUpdateRequest dto, UUID currentUserId);
 
-    void delete(UUID id);
+  void delete(UUID id);
 
-    User findUserById(UUID id);
+  User findUserById(UUID id);
 
-    boolean existsByEmail(String email);
+  boolean existsByEmail(String email);
 
-    UUID checkUserAndPassword(UserLoginDto dto);
+  UUID checkUserAndPassword(UserLoginDto dto);
 
-    void isExistsUserByEmail(String email);
+  void isExistsUserByEmail(String email);
 }

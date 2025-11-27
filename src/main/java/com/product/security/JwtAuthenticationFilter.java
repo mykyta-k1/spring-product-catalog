@@ -22,32 +22,32 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final CustomUserDetailsService userDetailsService;
-    private final JwtService jwtService;
+  private final CustomUserDetailsService userDetailsService;
+  private final JwtService jwtService;
 
-    @Override
-    protected void doFilterInternal(
-        HttpServletRequest request,
-        HttpServletResponse response,
-        FilterChain filterChain
-    ) throws ServletException, IOException {
+  @Override
+  protected void doFilterInternal(
+      HttpServletRequest request,
+      HttpServletResponse response,
+      FilterChain filterChain
+  ) throws ServletException, IOException {
 
-        Cookie[] cookies = request.getCookies();
+    Cookie[] cookies = request.getCookies();
 
-        if (cookies != null) {
-            Optional<Cookie> cookie = Arrays.stream(cookies)
-                .filter(c -> c.getName().equals("jwt_token")).findFirst();
-            if (cookie.isEmpty()) {
-                filterChain.doFilter(request, response);
-                return;
-            }
-            UUID userId = jwtService.pullsOutUserIdFromToken(cookie.get().getValue());
-            UserPrincipal principal = userDetailsService.loadUserById(userId);
+    if (cookies != null) {
+      Optional<Cookie> cookie = Arrays.stream(cookies)
+          .filter(c -> c.getName().equals("jwt_token")).findFirst();
+      if (cookie.isEmpty()) {
+        filterChain.doFilter(request, response);
+        return;
+      }
+      UUID userId = jwtService.pullsOutUserIdFromToken(cookie.get().getValue());
+      UserPrincipal principal = userDetailsService.loadUserById(userId);
 
-            Authentication auth = new UsernamePasswordAuthenticationToken(
-                principal, null, principal.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(auth);
-            filterChain.doFilter(request, response);
-        }
+      Authentication auth = new UsernamePasswordAuthenticationToken(
+          principal, null, principal.getAuthorities());
+      SecurityContextHolder.getContext().setAuthentication(auth);
+      filterChain.doFilter(request, response);
     }
+  }
 }

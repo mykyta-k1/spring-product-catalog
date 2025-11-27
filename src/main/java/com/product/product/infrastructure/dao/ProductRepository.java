@@ -11,11 +11,11 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 public interface ProductRepository extends JpaRepository<Product, UUID>,
     JpaSpecificationExecutor<Product> {
 
-    List<ProductShortView> findFirst5ByOrderByCreatedAtDesc();
+  List<ProductShortView> findFirst5ByOrderByCreatedAtDesc();
 
-    Optional<Product> findBySlug(String slug);
+  Optional<Product> findBySlug(String slug);
 
-    void deleteBySlug(String slug);
+  void deleteBySlug(String slug);
 
-    boolean existsBySlug(String slug);
+  boolean existsBySlug(String slug);
 }

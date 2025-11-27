@@ -7,7 +7,8 @@ import java.util.UUID;
 
 public interface JwtService {
 
-    String generateToken(UUID userId);
+  String generateToken(UUID userId);
 
-    UUID pullsOutUserIdFromToken(String token) throws ExpiredJwtException, SignatureException, MalformedJwtException;
+  UUID pullsOutUserIdFromToken(String token)
+      throws ExpiredJwtException, SignatureException, MalformedJwtException;
 }

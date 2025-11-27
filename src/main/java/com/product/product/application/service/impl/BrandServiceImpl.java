@@ -22,54 +22,54 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class BrandServiceImpl implements BrandService {
 
-    private final BrandRepository brandRepository;
-    private final BrandMapper brandMapper;
+  private final BrandRepository brandRepository;
+  private final BrandMapper brandMapper;
 
-    @Override
-    public Brand findById(UUID id) {
-        return brandRepository.findById(id).orElseThrow(BrandNotFoundException::new);
+  @Override
+  public Brand findById(UUID id) {
+    return brandRepository.findById(id).orElseThrow(BrandNotFoundException::new);
+  }
+
+  @Transactional(readOnly = false)
+  @Override
+  public void save(BrandCreateRequest dto) {
+    UUID id = UUID.randomUUID();
+    brandRepository.save(Brand.builder()
+        .id(id)
+        .name(dto.getName())
+        .slug(generateSlug(dto.getName(), id))
+        .logoUrl(dto.getLogoUrl())
+        .bannerUrl(dto.getBannerUrl())
+        .build()
+    );
+  }
+
+  @Transactional(readOnly = false)
+  @Override
+  public BrandUpdateResponse update(String slug, BrandUpdateRequest dto) {
+    Brand b = findBySlug(slug);
+    brandMapper.updateBrandFromDto(dto, b);
+
+    if (!b.getName().equals(dto.getName())) {
+      b.setSlug(generateSlug(dto.getName(), b.getId()));
     }
 
-    @Transactional(readOnly = false)
-    @Override
-    public void save(BrandCreateRequest dto) {
-        UUID id = UUID.randomUUID();
-        brandRepository.save(Brand.builder()
-            .id(id)
-            .name(dto.getName())
-            .slug(generateSlug(dto.getName(), id))
-            .logoUrl(dto.getLogoUrl())
-            .bannerUrl(dto.getBannerUrl())
-            .build()
-        );
-    }
+    return brandMapper.brandToBrandUpdateResponse(b);
+  }
 
-    @Transactional(readOnly = false)
-    @Override
-    public BrandUpdateResponse update(String slug, BrandUpdateRequest dto) {
-        Brand b = findBySlug(slug);
-        brandMapper.updateBrandFromDto(dto, b);
+  @Transactional(readOnly = false)
+  @Override
+  public void deleteBySlug(String slug) {
+    brandRepository.deleteBySlug(slug);
+  }
 
-        if (!b.getName().equals(dto.getName())) {
-            b.setSlug(generateSlug(dto.getName(), b.getId()));
-        }
+  private Brand findBySlug(String slug) {
+    return brandRepository.findBySlug(slug).orElseThrow(BrandNotFoundException::new);
+  }
 
-        return brandMapper.brandToBrandUpdateResponse(b);
-    }
-
-    @Transactional(readOnly = false)
-    @Override
-    public void deleteBySlug(String slug) {
-        brandRepository.deleteBySlug(slug);
-    }
-
-    private Brand findBySlug(String slug) {
-        return brandRepository.findBySlug(slug).orElseThrow(BrandNotFoundException::new);
-    }
-
-    @Override
-    public List<BrandShortResponse> findAllShortBrands() {
-        return brandRepository.findAll().stream()
-            .map(brandMapper::brandToBrandShortResponse).toList();
-    }
+  @Override
+  public List<BrandShortResponse> findAllShortBrands() {
+    return brandRepository.findAll().stream()
+        .map(brandMapper::brandToBrandShortResponse).toList();
+  }
 }

@@ -26,44 +26,44 @@ import org.hibernate.annotations.UpdateTimestamp;
 @AllArgsConstructor
 public class Product {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
+  private UUID id;
 
-    @Column(nullable = false)
-    private String name;
+  @Column(nullable = false)
+  private String name;
 
-    @Column(nullable = false, unique = true)
-    private String slug;
-    private String imageUrl;
+  @Column(nullable = false, unique = true)
+  private String slug;
+  private String imageUrl;
 
-    @Column(columnDefinition = "TEXT")
-    private String description;
+  @Column(columnDefinition = "TEXT")
+  private String description;
 
-    @Builder.Default
-    @Column(nullable = false)
-    private BigDecimal price = BigDecimal.ZERO;
-    private int stock = 0;
+  @Builder.Default
+  @Column(nullable = false)
+  private BigDecimal price = BigDecimal.ZERO;
+  private int stock = 0;
 
-    @ManyToOne
-    private Brand brand;
+  @ManyToOne
+  private Brand brand;
 
-    @ManyToOne
-    private Category category;
+  @ManyToOne
+  private Category category;
 
-    @ManyToOne
-    private ProductType productType;
+  @ManyToOne
+  private ProductType productType;
 
-    @Builder.Default
-    private int weightGrams = 0;
+  @Builder.Default
+  private int weightGrams = 0;
 
-    @Builder.Default
-    private int volumeMl = 0;
-    private String series;
+  @Builder.Default
+  private int volumeMl = 0;
+  private String series;
 
-    @CreationTimestamp
-    private OffsetDateTime createdAt;
+  @CreationTimestamp
+  private OffsetDateTime createdAt;
 
-    @UpdateTimestamp
-    private OffsetDateTime updatedAt;
+  @UpdateTimestamp
+  private OffsetDateTime updatedAt;
 }

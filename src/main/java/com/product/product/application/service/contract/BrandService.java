@@ -11,13 +11,13 @@ import java.util.UUID;
 
 public interface BrandService {
 
-    Brand findById(UUID id);
+  Brand findById(UUID id);
 
-    void save(BrandCreateRequest dto);
+  void save(BrandCreateRequest dto);
 
-    BrandUpdateResponse update(String slug, BrandUpdateRequest brandUpdateRequest);
+  BrandUpdateResponse update(String slug, BrandUpdateRequest brandUpdateRequest);
 
-    void deleteBySlug(String slug);
+  void deleteBySlug(String slug);
 
-    List<BrandShortResponse> findAllShortBrands();
+  List<BrandShortResponse> findAllShortBrands();
 }

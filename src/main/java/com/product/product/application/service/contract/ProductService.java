@@ -13,18 +13,18 @@ import org.springframework.data.domain.Pageable;
 
 public interface ProductService {
 
-    ProductDetailsResponse findBySlug(String slug);
+  ProductDetailsResponse findBySlug(String slug);
 
-    ProductUpdateResponse save(ProductCreateRequest dto);
+  ProductUpdateResponse save(ProductCreateRequest dto);
 
-    ProductUpdateResponse update(String slug, ProductUpdateRequest dto);
+  ProductUpdateResponse update(String slug, ProductUpdateRequest dto);
 
-    void deleteBySlug(String slug);
+  void deleteBySlug(String slug);
 
-    Page<ProductShortResponse> findAllBy(ProductFilterRequest filters, Pageable pageable);
+  Page<ProductShortResponse> findAllBy(ProductFilterRequest filters, Pageable pageable);
 
-    Page<ProductDetailsResponse> findAllBy(
-        String keyword, BigDecimal minPrice, BigDecimal maxPrice, Pageable pageable);
+  Page<ProductDetailsResponse> findAllBy(
+      String keyword, BigDecimal minPrice, BigDecimal maxPrice, Pageable pageable);
 
-    List<ProductShortResponse> findAllProductsByLatestCreatedAt();
+  List<ProductShortResponse> findAllProductsByLatestCreatedAt();
 }

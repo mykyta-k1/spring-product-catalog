@@ -20,51 +20,51 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class ProductTypeServiceImpl implements ProductTypeService {
 
-    private final ProductTypeRepository productTypeRepository;
-    private final ProductTypeMapper productTypeMapper;
+  private final ProductTypeRepository productTypeRepository;
+  private final ProductTypeMapper productTypeMapper;
 
-    @Override
-    public ProductType findById(UUID id) {
-        return productTypeRepository.findById(id).orElseThrow(ProductTypeNotFoundException::new);
+  @Override
+  public ProductType findById(UUID id) {
+    return productTypeRepository.findById(id).orElseThrow(ProductTypeNotFoundException::new);
+  }
+
+  @Transactional(readOnly = false)
+  @Override
+  public void save(String name) {
+    productTypeRepository.save(ProductType.builder()
+        .name(name)
+        .slug(generateSlug(name, UUID.randomUUID()))
+        .build()
+    );
+  }
+
+  @Transactional(readOnly = false)
+  @Override
+  public ProductTypeUpdateResponse update(String slug, String name) {
+    ProductType p = findBySlug(slug);
+
+    if (!p.getName().equals(name)) {
+      p.setName(name);
+      generateSlug(name, UUID.randomUUID());
     }
 
-    @Transactional(readOnly = false)
-    @Override
-    public void save(String name) {
-        productTypeRepository.save(ProductType.builder()
-            .name(name)
-                .slug(generateSlug(name, UUID.randomUUID()))
-            .build()
-        );
-    }
+    return productTypeMapper.productTypeToProductTypeUpdateResponse(p);
+  }
 
-    @Transactional(readOnly = false)
-    @Override
-    public ProductTypeUpdateResponse update(String slug, String name) {
-        ProductType p = findBySlug(slug);
+  @Transactional(readOnly = false)
+  @Override
+  public void deleteBySlug(String slug) {
+    productTypeRepository.deleteBySlug(slug);
+  }
 
-        if (!p.getName().equals(name)) {
-            p.setName(name);
-            generateSlug(name, UUID.randomUUID());
-        }
+  private ProductType findBySlug(String slug) {
+    return productTypeRepository.findBySlug(slug)
+        .orElseThrow(ProductTypeNotFoundException::new);
+  }
 
-        return productTypeMapper.productTypeToProductTypeUpdateResponse(p);
-    }
-
-    @Transactional(readOnly = false)
-    @Override
-    public void deleteBySlug(String slug) {
-        productTypeRepository.deleteBySlug(slug);
-    }
-
-    private ProductType findBySlug(String slug) {
-        return productTypeRepository.findBySlug(slug)
-            .orElseThrow(ProductTypeNotFoundException::new);
-    }
-
-    @Override
-    public List<ProductTypeShortResponse> findAllShortProductTypes() {
-        return productTypeRepository.findAll().stream()
-            .map(productTypeMapper::productTypeToProductTypeShortResponse).toList();
-    }
+  @Override
+  public List<ProductTypeShortResponse> findAllShortProductTypes() {
+    return productTypeRepository.findAll().stream()
+        .map(productTypeMapper::productTypeToProductTypeShortResponse).toList();
+  }
 }
