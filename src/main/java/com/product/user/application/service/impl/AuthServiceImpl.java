@@ -7,8 +7,10 @@ import com.product.user.application.service.contract.AuthService;
 import com.product.user.application.service.contract.UserService;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
@@ -18,7 +20,9 @@ public class AuthServiceImpl implements AuthService {
 
   @Override
   public String login(UserLoginDto dto) {
+    log.info("Checking user and password...");
     UUID userId = userService.checkUserAndPassword(dto);
+    log.info("Generating jwt...");
     return jwtService.generateToken(userId);
   }
 

@@ -10,9 +10,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.UUID;
 import javax.crypto.SecretKey;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class JwtServiceImpl implements JwtService {
 
@@ -29,6 +31,7 @@ public class JwtServiceImpl implements JwtService {
 
   @Override
   public String generateToken(UUID userId) {
+    log.info("Generating token for user {}", userId);
     return Jwts.builder()
         .subject(userId.toString())
         .issuedAt(new Date())
@@ -40,6 +43,7 @@ public class JwtServiceImpl implements JwtService {
   @Override
   public UUID pullsOutUserIdFromToken(String token)
       throws ExpiredJwtException, SignatureException, MalformedJwtException {
+    log.info("Pulling out token for user {}", token);
     return UUID.fromString(Jwts.parser()
         .verifyWith(secretKey)
         .build()

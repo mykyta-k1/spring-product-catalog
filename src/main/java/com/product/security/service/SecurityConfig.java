@@ -13,6 +13,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -30,22 +31,25 @@ public class SecurityConfig {
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    http.csrf(AbstractHttpConfigurer::disable)
+    http.csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+            .ignoringRequestMatchers("/h2-console/**"))
         .cors(cors -> cors.configurationSource(corsConfigurationSource()))
         .sessionManagement(
             session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(auth -> auth
-            .requestMatchers(
-                "/auth/**", "/products/**", "/api/v1/**", "/api/v2/**", "/swagger-ui/**", "/v3/**")
-            .permitAll()
+            .requestMatchers("/swagger-ui/**", "/h2-console/**").permitAll()
+            .requestMatchers("/api/v1/**", "/api/v2/**").permitAll()
+            .requestMatchers("/products/**").permitAll()
+            .requestMatchers("/auth/**").permitAll()
             .anyRequest().authenticated())
         .logout(logout -> logout
             .logoutUrl("/logout")
             .deleteCookies("jwt_token")
             .logoutSuccessUrl("/login")
         ).formLogin(AbstractHttpConfigurer::disable)
-        .headers(headers -> headers.frameOptions(FrameOptionsConfig::disable))
-        .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+        .headers(headers -> headers
+            .frameOptions(FrameOptionsConfig::sameOrigin)
+        ).addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     return http.build();
   }
 
@@ -62,8 +66,8 @@ public class SecurityConfig {
   @Bean
   public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration cors = new CorsConfiguration();
-    cors.setAllowedOrigins(List.of( // З аргументом * це була б максимально відкрита конфігурація.
-        "http://localhost:8080")); // Дозволяє будь-якому домену в Інтернеті робити запити до API.
+    cors.setAllowedOrigins(List.of(
+        "http://localhost:8080"));
     cors.setAllowedMethods(List.of(
         "GET", "POST", "PUT",
         "DELETE"

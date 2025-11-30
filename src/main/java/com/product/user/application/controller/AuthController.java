@@ -5,13 +5,14 @@ import com.product.user.application.dto.req.UserDtoRequestFactory.UserRegisterDt
 import com.product.user.application.service.contract.AuthService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -25,22 +26,23 @@ public class AuthController {
 
   @GetMapping("/login")
   public String loginPage(Model model) {
-    log.warn("loginPage loaded");
-//        model.addAttribute("loginForm", new UserLoginDto());
+    model.addAttribute("loginForm", new UserLoginDto());
     return "login";
   }
 
   @GetMapping("/register")
   public String registerPage(Model model) {
-    log.warn("registerPage loaded");
-//        model.addAttribute("registerForm", new UserRegisterDto());
+    model.addAttribute("registerForm", new UserRegisterDto());
     return "register";
   }
 
   @PostMapping("/login")
   public String login(
-      Model model, HttpServletResponse resp, @Validated UserLoginDto dto, BindingResult result) {
+      @Valid @ModelAttribute("loginForm") UserLoginDto dto, BindingResult result, Model model,
+      HttpServletResponse resp
+  ) {
     if (result.hasErrors()) {
+      log.info("login is not complete");
       model.addAttribute("loginForm", dto);
       return "login";
     }
@@ -54,17 +56,23 @@ public class AuthController {
     cookie.setMaxAge(86400); // Expiration
     resp.addCookie(cookie);
 
-    return "redirect:/categories";
+    log.info("login complete");
+    return "redirect:/api/v2/categories";
   }
 
   @PostMapping("/register")
-  public String register(Model model, @Validated UserRegisterDto dto, BindingResult result) {
+  public String register(
+      @Valid @ModelAttribute("registerForm") UserRegisterDto dto, BindingResult result,
+      Model model
+  ) {
     if (result.hasErrors()) {
+      log.info("register is not complete");
       model.addAttribute("registerForm", dto);
       return "register";
     }
 
     authService.register(dto);
+    log.info("register complete");
     return "redirect:login";
   }
 }

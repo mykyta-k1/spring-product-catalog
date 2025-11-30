@@ -17,15 +17,15 @@
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container-fluid">
-    <a class="navbar-brand" href="/categories">My Shop</a>
+    <a class="navbar-brand" href="/api/v2/categories">My Shop</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
             data-bs-target="#navbarNav">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto">
-        <li class="nav-item"><a class="nav-link" href="/categories">Головна</a></li>
-        <li class="nav-item"><a class="nav-link active" href="/products">Продукти</a></li>
+        <li class="nav-item"><a class="nav-link" href="/api/v2/categories">Головна</a></li>
+        <li class="nav-item"><a class="nav-link active" href="/api/v2/products">Продукти</a></li>
       </ul>
     </div>
   </div>
@@ -41,7 +41,7 @@
           <h5 class="mb-0">Фільтри</h5>
         </div>
         <div class="card-body">
-          <form method="get" action="/products">
+          <form method="get" action="/api/v2/products">
 
             <!-- Пошук за ключовим словом -->
             <div class="mb-3">
@@ -82,7 +82,7 @@
                 </option>
               </select>
             </div>
-
+/products
             <!-- В наявності -->
             <div class="mb-3 form-check">
               <input type="checkbox" class="form-check-input"
@@ -148,7 +148,7 @@
             <!-- Кнопки -->
             <div class="d-grid gap-2">
               <button type="submit" class="btn btn-primary">Застосувати</button>
-              <a href="/products" class="btn btn-outline-secondary">Скинути</a>
+              <a href="/api/v2/products" class="btn btn-outline-secondary">Скинути</a>
             </div>
           </form>
         </div>
@@ -171,7 +171,7 @@
       <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 g-4">
         <div class="col" th:each="product : ${listProducts.content}">
           <div class="card h-100 shadow-sm">
-            <a th:href="@{/products/{slug}(slug=${product.slug})}" class="text-decoration-none">
+            <a th:href="@{/api/v2/products/{slug}(slug=${product.slug})}" class="text-decoration-none">
               <img th:src="${product.imageUrl}"
                    class="card-img-top"
                    th:alt="${product.name}"
@@ -184,7 +184,7 @@
               </div>
             </a>
             <div class="card-footer bg-transparent border-0">
-              <a th:href="@{/products/{slug}(slug=${product.slug})}"
+              <a th:href="@{/api/v2/products/{slug}(slug=${product.slug})}"
                  class="btn btn-sm btn-outline-primary w-100">
                 Детальніше
               </a>
@@ -205,7 +205,7 @@
           <!-- Попередня сторінка -->
           <li class="page-item" th:classappend="${!listProducts.hasPrevious()} ? 'disabled'">
             <a class="page-link"
-               th:href="@{/products(page=${listProducts.number - 1}, size=${listProducts.size})}">
+               th:href="@{/api/v2/products(page=${listProducts.number - 1}, size=${listProducts.size})}">
               Назад
             </a>
           </li>
@@ -215,14 +215,14 @@
               th:each="i : ${#numbers.sequence(0, listProducts.totalPages - 1)}"
               th:classappend="${i == listProducts.number} ? 'active'">
             <a class="page-link"
-               th:href="@{/products(page=${i}, size=${listProducts.size})}"
+               th:href="@{/api/v2/products(page=${i}, size=${listProducts.size})}"
                th:text="${i + 1}"></a>
           </li>
 
           <!-- Наступна сторінка -->
           <li class="page-item" th:classappend="${!listProducts.hasNext()} ? 'disabled'">
             <a class="page-link"
-               th:href="@{/products(page=${listProducts.number + 1}, size=${listProducts.size})}">
+               th:href="@{/api/v2/products(page=${listProducts.number + 1}, size=${listProducts.size})}">
               Вперед
             </a>
           </li>

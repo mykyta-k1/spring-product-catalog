@@ -18,6 +18,6 @@ public class PasswordEncoderServiceImpl implements PasswordEncoderService {
 
   @Override
   public boolean checkPassword(String plainPassword, String hashedPassword) {
-    return bCryptPasswordEncoder.matches(hashedPassword, hashedPassword);
+    return bCryptPasswordEncoder.matches(plainPassword, hashedPassword);
   }
 }

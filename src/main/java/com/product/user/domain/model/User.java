@@ -46,10 +46,10 @@ public class User {
   private String patronymic;
 
   @Builder.Default
-  private boolean isActive = false;
+  private boolean isActive = true;
 
   @Builder.Default
-  private boolean isVerified = false;
+  private boolean isVerified = true;
 
   @Builder.Default
   @Enumerated(EnumType.STRING)

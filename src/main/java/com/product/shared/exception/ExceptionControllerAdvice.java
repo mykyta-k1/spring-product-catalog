@@ -31,7 +31,7 @@ public final class ExceptionControllerAdvice {
     ex.getBindingResult().getAllErrors().forEach(error ->
         errors.put(error.getObjectName(), error.getDefaultMessage()));
 
-    log.error("Validation error: {}", errors);
+    log.info("Validation error: {}", errors);
 
     return ResponseEntity.badRequest().body(new ErrorResponse(
         OffsetDateTime.now(),

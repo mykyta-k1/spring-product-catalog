@@ -3,9 +3,9 @@ package com.product.product.application.dto.req;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PositiveOrZero;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 
 public final class ProductDtoRequestFactory {
@@ -102,15 +102,4 @@ public final class ProductDtoRequestFactory {
     private Integer minVolume;
     private Integer maxVolume;
   }
-
-  /**
-   * Призначення: DTO що приймає дані про ключове слово пошуку, та ціновий діапазон продукту
-   */
-//    @Setter
-//    @Getter
-//    public static class ProductShortRestFilterRequest {
-//        private String keyword;
-//        private BigDecimal minPrice;
-//        private BigDecimal maxPrice;
-//    }
 }

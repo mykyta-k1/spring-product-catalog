@@ -21,7 +21,7 @@
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container-fluid">
-    <a class="navbar-brand" href="/categories">My Shop</a>
+    <a class="navbar-brand" href="/api/v2/categories">My Shop</a>
   </div>
 </nav>
 
@@ -33,15 +33,14 @@
     <div class="card-body">
 
       <form th:action="@{/auth/register}" th:object="${registerForm}" method="post">
-
         <div class="mb-3">
-          <label for="email" class="form-label">Email</label>
+          <label for="email" class="form-label">*Email</label>
           <input type="email" class="form-control" id="email" th:field="*{email}" required>
           <div class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
         </div>
 
         <div class="mb-3">
-          <label for="password" class="form-label">Пароль</label>
+          <label for="password" class="form-label">*Пароль</label>
           <input type="password" class="form-control" id="password" th:field="*{password}" required>
           <div class="text-danger" th:if="${#fields.hasErrors('password')}"
                th:errors="*{password}"></div>
@@ -49,11 +48,11 @@
 
         <div class="row">
           <div class="col-md-6 mb-3">
-            <label for="firstName" class="form-label">Ім'я</label>
+            <label for="firstName" class="form-label">*Ім'я</label>
             <input type="text" class="form-control" id="firstName" th:field="*{firstName}" required>
           </div>
           <div class="col-md-6 mb-3">
-            <label for="lastName" class="form-label">Прізвище</label>
+            <label for="lastName" class="form-label">*Прізвище</label>
             <input type="text" class="form-control" id="lastName" th:field="*{lastName}" required>
           </div>
         </div>

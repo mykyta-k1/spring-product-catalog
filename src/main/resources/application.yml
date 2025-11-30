@@ -15,6 +15,6 @@ spring:
 jwt:
   secret: your-very-long-secret-key-at-least-256-bits-long-for-HS256-algorithm
   expiration: 86400000
-#logging:
-#  level:
-#    org.springframework.security: DEBUG
+logging:
+  level:
+    org.springframework.security: DEBUG

@@ -1,9 +1,9 @@
 package com.product.user.application.dto.req;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.Getter;
 import lombok.ToString;
@@ -39,15 +39,15 @@ public final class UserDtoRequestFactory {
   public static class UserRegisterDto {
 
     @NotBlank(message = "First name field cannot be empty")
-    @Size(min = 1, max = 100, message = "First name must be between 1 and 100 characters long")
+    @Size(min = 3, max = 100, message = "First name must be between 1 and 100 characters long")
     private String firstName;
 
     @NotBlank(message = "Last name field cannot be empty")
-    @Size(min = 1, max = 100, message = "Last name must be between 1 and 100 characters long")
+    @Size(min = 3, max = 100, message = "Last name must be between 1 and 100 characters long")
     private String lastName;
 
     @NotBlank(message = "Patronymic name field cannot be empty")
-    @Size(min = 1, max = 100, message = "Patronymic name must be between 1 and 100 characters long")
+    @Size(min = 3, max = 100, message = "Patronymic name must be between 1 and 100 characters long")
     private String patronymic;
 
     @NotBlank(message = "Email field cannot be empty")
@@ -72,15 +72,15 @@ public final class UserDtoRequestFactory {
   public static class UserUpdateRequest {
 
     @NotBlank(message = "First name field cannot be empty")
-    @Size(min = 1, max = 100, message = "First name must be between 1 and 100 characters long")
+    @Size(min = 3, max = 100, message = "First name must be between 1 and 100 characters long")
     private String firstName;
 
     @NotBlank(message = "Last name field cannot be empty")
-    @Size(min = 1, max = 100, message = "Last name must be between 1 and 100 characters long")
+    @Size(min = 3, max = 100, message = "Last name must be between 1 and 100 characters long")
     private String lastName;
 
     @NotBlank(message = "Patronymic name field cannot be empty")
-    @Size(min = 1, max = 100, message = "Patronymic name must be between 1 and 100 characters long")
+    @Size(min = 3, max = 100, message = "Patronymic name must be between 1 and 100 characters long")
     private String patronymic;
   }
 

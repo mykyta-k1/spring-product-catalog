@@ -9,9 +9,10 @@ import com.product.product.application.dto.resp.ProductDtoResponseFactory.Produc
 import com.product.product.application.dto.resp.ProductDtoResponseFactory.ProductUpdateResponse;
 import com.product.product.application.exception.ProductNotFoundDataException;
 import com.product.product.application.service.contract.ProductService;
+import jakarta.validation.Valid;
 import java.math.BigDecimal;
-import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/products")
 @RequiredArgsConstructor
@@ -60,9 +62,9 @@ public class ProductRestController {
     return ResponseEntity.status(CREATED).body(productService.save(dto));
   }
 
-  @PutMapping
+  @PutMapping("/{slug}")
   public ResponseEntity<ProductUpdateResponse> update(
-      @RequestParam String slug, @Valid @RequestBody ProductUpdateRequest dto) {
+      @PathVariable String slug, @Valid @RequestBody ProductUpdateRequest dto) {
     return ResponseEntity.ok().body(productService.update(slug, dto));
   }
 

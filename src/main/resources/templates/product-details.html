@@ -16,7 +16,7 @@
     <div class="collapse navbar-collapse">
       <ul class="navbar-nav ms-auto">
         <li class="nav-item"><a class="nav-link" href="/">Головна</a></li>
-        <li class="nav-item"><a class="nav-link" href="/products">Продукти</a></li>
+        <li class="nav-item"><a class="nav-link" href="/api/v2/products">Продукти</a></li>
       </ul>
     </div>
   </div>
@@ -27,8 +27,8 @@
   <!-- Breadcrumb -->
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="/categories">Головна</a></li>
-      <li class="breadcrumb-item"><a href="/products">Продукти</a></li>
+      <li class="breadcrumb-item"><a href="/api/v2/categories">Головна</a></li>
+      <li class="breadcrumb-item"><a href="/api/v2/products">Продукти</a></li>
       <li class="breadcrumb-item active" th:text="${product.name}"></li>
     </ol>
   </nav>
@@ -103,7 +103,7 @@
                 th:disabled="${product.stock <= 0}">
           Додати в кошик
         </button>
-        <a href="/products" class="btn btn-outline-secondary">
+        <a href="/api/v2/products" class="btn btn-outline-secondary">
           Повернутись до списку
         </a>
       </div>

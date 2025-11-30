@@ -9,19 +9,29 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
+  private static final List<String> PUBLIC_URLS = List.of(
+      "/auth/login",
+      "/auth/register",
+      "/favicon.ico",
+      "/logout",
+      "/h2-console"
+  );
   private final CustomUserDetailsService userDetailsService;
   private final JwtService jwtService;
 
@@ -32,6 +42,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       FilterChain filterChain
   ) throws ServletException, IOException {
 
+    String requestPath = request.getRequestURI();
+    if (PUBLIC_URLS.stream().anyMatch(requestPath::startsWith)) {
+      log.debug("Skipping JWT validation for public URL: {}", requestPath);
+      filterChain.doFilter(request, response);
+      return;
+    }
+
     Cookie[] cookies = request.getCookies();
 
     if (cookies != null) {
@@ -39,6 +56,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
           .filter(c -> c.getName().equals("jwt_token")).findFirst();
       if (cookie.isEmpty()) {
         filterChain.doFilter(request, response);
+        logger.info("User token is not valid by " + requestPath);
         return;
       }
       UUID userId = jwtService.pullsOutUserIdFromToken(cookie.get().getValue());
@@ -47,7 +65,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       Authentication auth = new UsernamePasswordAuthenticationToken(
           principal, null, principal.getAuthorities());
       SecurityContextHolder.getContext().setAuthentication(auth);
-      filterChain.doFilter(request, response);
+      logger.info("User token is valid by " + requestPath);
     }
+    filterChain.doFilter(request, response);
   }
 }

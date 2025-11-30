@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService {
   @Transactional(readOnly = false)
   @Override
   public void save(UserRegisterDto dto) {
-    userRepository.save(User.builder()
+    User u = userRepository.save(User.builder()
         .email(dto.getEmail())
         .passwordHash(passwordEncoder.hashPassword(dto.getPassword()))
         .firstName(dto.getFirstName())
@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService {
         .patronymic(dto.getPatronymic())
         .build()
     );
-    log.info("Saving user {}", dto);
+    log.info("Saving user {}", u);
   }
 
   @Transactional(readOnly = false)
@@ -52,11 +52,12 @@ public class UserServiceImpl implements UserService {
   @Override
   public UUID checkUserAndPassword(UserLoginDto dto) {
     User u = findUserByEmail(dto.getEmail());
-
+    log.info("Checking dto password {}", dto.getPassword());
+    log.info("Checking user password {}", u.getPasswordHash());
     if (!passwordEncoder.checkPassword(dto.getPassword(), u.getPasswordHash())) {
       throw new UserNotFoundException("Incorrect email, nickname, or password");
     }
-
+    log.info("Checking user is good");
     return u.getId();
   }
 
