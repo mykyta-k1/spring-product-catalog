@@ -28,6 +28,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
   private static final List<String> PUBLIC_URLS = List.of(
       "/auth/login",
       "/auth/register",
+      "/swagger-ui",
+      "/v3/",
       "/favicon.ico",
       "/logout",
       "/h2-console"

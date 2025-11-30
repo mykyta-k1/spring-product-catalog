@@ -32,12 +32,12 @@ public class SecurityConfig {
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http.csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-            .ignoringRequestMatchers("/h2-console/**"))
+            .ignoringRequestMatchers("/swagger-ui/**", "/v3/**", "/h2-console/**"))
         .cors(cors -> cors.configurationSource(corsConfigurationSource()))
         .sessionManagement(
             session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/swagger-ui/**", "/h2-console/**").permitAll()
+            .requestMatchers("/swagger-ui/**", "/v3/**", "/h2-console/**").permitAll()
             .requestMatchers("/api/v1/**", "/api/v2/**").permitAll()
             .requestMatchers("/products/**").permitAll()
             .requestMatchers("/auth/**").permitAll()
